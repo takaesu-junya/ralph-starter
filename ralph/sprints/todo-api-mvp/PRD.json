@@ -1,0 +1,109 @@
+{
+  "title": "TODO 管理 API（CRUD + RDBMS）の MVP を作る",
+  "context": {
+    "background": "Ralph Wiggum パターンを体験するためのサンプルスプリント。CRUD と RDBMS を必ず通す題材として、シンプルな TODO 管理 API を作る。",
+    "tech_stack": [
+      "Python 3.12",
+      "FastAPI",
+      "SQLAlchemy 2.x",
+      "Alembic（マイグレーション）",
+      "PostgreSQL 16（docker compose で起動）",
+      "uv（パッケージ管理）",
+      "pytest（テスト）",
+      "ruff（フォーマッタ & Linter）"
+    ],
+    "constraints": [
+      "外部 SaaS には接続しない（DB は docker compose 内の PostgreSQL を使う）",
+      "シークレットはコミットしない（.env.example は OK、.env はコミットしない）",
+      "Python 標準のロギングのみを使う。新規ロギングライブラリは入れない"
+    ],
+    "non_functional_requirements": [
+      "ローカルで docker compose up → API 起動 → pytest 緑、までが README の手順だけで完結すること",
+      "API レスポンスは JSON。タイムスタンプは ISO 8601 (UTC)"
+    ],
+    "out_of_scope": [
+      "認証・認可",
+      "本番デプロイ",
+      "フロントエンド（UI）",
+      "ページネーション以外の高度な検索機能"
+    ]
+  },
+  "stories": [
+    {
+      "id": 1,
+      "title": "プロジェクト基盤の用意（FastAPI + PostgreSQL + docker compose）",
+      "criteria": [
+        "uv init 相当でプロジェクトが初期化され、pyproject.toml に fastapi / uvicorn / sqlalchemy / alembic / psycopg / pytest / ruff が宣言されている",
+        "docker-compose.yml に app サービスと postgres サービスが定義されている",
+        "docker compose up -d でコンテナが起動し、GET / でヘルスチェック相当の 200 が返る",
+        ".env.example に DATABASE_URL のサンプルがあり、.gitignore で .env が除外されている",
+        "README に「起動 / 停止 / テスト実行」の手順が書かれている"
+      ],
+      "passes": false
+    },
+    {
+      "id": 2,
+      "title": "Todo モデルと Alembic マイグレーション",
+      "criteria": [
+        "todos テーブルが id (PK) / title (NOT NULL) / description (nullable) / done (BOOL, default false) / created_at / updated_at を持つ",
+        "Alembic で初回マイグレーションが生成され、alembic upgrade head で適用できる",
+        "SQLAlchemy のモデルクラスがテーブル定義と一致している"
+      ],
+      "passes": false
+    },
+    {
+      "id": 3,
+      "title": "Create: POST /todos",
+      "criteria": [
+        "POST /todos に {title, description?} を渡すと 201 で作成済み Todo を返す",
+        "title が空文字 / 欠落の場合は 422 を返す",
+        "DB に INSERT され、created_at / updated_at が現在時刻で埋まる",
+        "pytest で正常系・異常系の両方をカバーするテストが追加されている"
+      ],
+      "passes": false
+    },
+    {
+      "id": 4,
+      "title": "Read: GET /todos と GET /todos/{id}",
+      "criteria": [
+        "GET /todos が全件を created_at 降順で返す",
+        "GET /todos に limit / offset クエリでページネーションできる（デフォルト limit=50）",
+        "GET /todos/{id} が該当 1 件を返し、無ければ 404",
+        "pytest で空配列・複数件・404 のケースがカバーされている"
+      ],
+      "passes": false
+    },
+    {
+      "id": 5,
+      "title": "Update: PATCH /todos/{id}",
+      "criteria": [
+        "PATCH /todos/{id} に {title?, description?, done?} を渡すと部分更新できる",
+        "更新時に updated_at が現在時刻に更新される",
+        "存在しない id は 404",
+        "title を空文字に更新しようとした場合は 422",
+        "pytest で正常系（部分更新）・異常系（404 / 422）がカバーされている"
+      ],
+      "passes": false
+    },
+    {
+      "id": 6,
+      "title": "Delete: DELETE /todos/{id}",
+      "criteria": [
+        "DELETE /todos/{id} で該当行が削除され 204 を返す",
+        "存在しない id は 404",
+        "pytest で正常系・404 がカバーされている"
+      ],
+      "passes": false
+    },
+    {
+      "id": 7,
+      "title": "仕上げ: ruff / pytest を CI 想定で 1 コマンド化",
+      "criteria": [
+        "ruff format --check と ruff check が緑",
+        "pytest が全件パスする",
+        "README に「make check 相当の 1 コマンド」または同等のシェルワンライナーが書かれている"
+      ],
+      "passes": false
+    }
+  ]
+}
