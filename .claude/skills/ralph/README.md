@@ -87,19 +87,30 @@ Skill 全体像を把握するためのファイル、という役割分担で�
 - ループの完了条件は「全 story が `passes: true`」
 - ひな形: [`templates/PRD.example.json`](templates/PRD.example.json)
 
-### PROMPT.md — AI 指示の唯一の出所
+### PROMPT.md — ループ手続きの指示書
 
 毎イテレーション、`ralph.sh` がそのままプロンプトに連結する常駐指示書。
-**AI への指示はすべてここに集約する**（`ralph.sh` には書かない）のがこのスキルの設計原則。
+**ループ手続き**（1 イテ 1 ストーリー、完了シグナル、headless 等）だけをここに書く。
 
-書くべき内容:
+技術スタック・コーディング規約・実コマンドのような **プロジェクト恒久ファクト** は
+ここではなく、リポジトリルートの `AGENTS.md` に書く。Claude Code は `CLAUDE.md`
+（→ `@AGENTS.md`）経由で自動的に読み込むので、PROMPT.md に重複させる必要はない。
 
-- このスプリントの目的
-- 技術スタック・ローカルルール
+PROMPT.md に書くべき内容:
+
+- このスプリントの目的（1〜3 行）
 - 1 イテレーションの手順
-- やってはいけないこと
+- やってはいけないこと（ループ運用に関するもの）
 - 完了シグナル（`<promise>COMPLETE</promise>`）の出し方
 - headless 実行モードの注意
+
+AGENTS.md に書くべき内容（プロジェクト全体）:
+
+- 技術スタック（言語、フレームワーク、DB 等）
+- 実コマンド（test, lint, format, build）
+- コーディング規約
+- API / DB 等の規約
+- 禁止事項（シークレットのコミット等）
 
 ひな形: [`templates/PROMPT.example.md`](templates/PROMPT.example.md)
 

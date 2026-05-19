@@ -99,9 +99,10 @@ jq '.stories[] | {id, title, passes}' ralph/sprints/todo-api-mvp/PRD.json
 
 ## このリポジトリ固有のカスタマイズポイント
 
-- **規約を足したい**: ルートの `AGENTS.md` か `ralph/sprints/todo-api-mvp/AGENTS.md`
-  にプロジェクト規約を書く（命名、禁止事項、コーディングルール 等）。Claude Code は
-  `CLAUDE.md` 経由で `AGENTS.md` を自動で読み込む
+- **規約を足したい**: ルートの `AGENTS.md` にプロジェクト規約を書く（命名、禁止事項、
+  コーディングルール、技術スタック、実コマンド 等）。Claude Code は `CLAUDE.md` 経由で
+  `AGENTS.md` を自動で読み込む。スプリント固有の手続き（このスプリントだけの段取り）は
+  `ralph/sprints/<sprint>/PROMPT.md` に書く
 - **使えるツールを増やしたい**: `ralph.sh` の `--allowedTools` リストに追加する
 - **ループ回数を増やしたい**: `./ralph.sh <sprint_dir> 50` のように第 2 引数を増やす
 - **題材を変えたい**: 上記「Step 1」のディレクトリコピー方式

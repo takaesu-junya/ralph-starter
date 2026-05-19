@@ -81,7 +81,7 @@ Claude Code 固有ではなく、Codex / Gemini CLI / opencode でも同じパ�
 ```
 [1] PRD.json を見る → 未完 story を 1 つ選ぶ（id=3 とする）
 [2] 受け入れ基準 (criteria) を満たす実装をする
-[3] ruff / pytest を回す → 緑になる
+[3] pint / phpunit を回す → 緑になる
 [4] git commit する
 [5] PRD.json の story[3].passes を true にする
 [6] progress.txt に「何を / どう / なぜ」を 5 行追記

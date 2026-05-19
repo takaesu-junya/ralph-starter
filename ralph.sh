@@ -13,8 +13,10 @@ set -euo pipefail
 #
 # 責務分離:
 #   - ralph.sh        : ループ・終了判定・ログ合成だけ。AI への指示は一切書かない
-#   - PROMPT.md       : AI への指示 (1 イテ 1 ストーリー、完了シグナル、headless 等)
-#   - PRD.json        : 何を作るか（passes フラグで進捗管理）
+#   - PRD.json        : WHAT — 何を作るか（passes フラグで進捗管理）
+#   - PROMPT.md       : ループ手続き（1 イテ 1 ストーリー、完了シグナル、headless 等）
+#   - AGENTS.md       : HOW — 技術スタック・規約・実コマンド（リポジトリルート）
+#                       Claude Code が cwd→CLAUDE.md→@AGENTS.md の経路で自動ロードする
 #
 # Sub issue 連携や PR 作成のような外部副作用も PROMPT.md 側で
 # AI に gh コマンドを叩かせて実現します（このスクリプトには書きません）。
@@ -63,7 +65,7 @@ while [ "$ITERATION" -lt "$MAX_ITERATIONS" ]; do
   PROMPT="## Sprint Directory
 $SPRINT_DIR_ABS
 
-## PRD.json (current state)
+## PRD.json (current state — WHAT to build)
 \`\`\`json
 $(cat "$PRD_FILE_ABS")
 \`\`\`
@@ -113,17 +115,12 @@ $(cat "$PROMPT_FILE_ABS")
       "Bash(docker *)" \
       "Bash(docker-compose *)" \
       "Bash(docker compose *)" \
-      "Bash(python *)" \
-      "Bash(python3 *)" \
-      "Bash(pip *)" \
-      "Bash(pip3 *)" \
-      "Bash(uv *)" \
-      "Bash(ruff *)" \
-      "Bash(pytest *)" \
-      "Bash(pytest)" \
-      "Bash(node *)" \
-      "Bash(npm *)" \
-      "Bash(npx *)" \
+      "Bash(php *)" \
+      "Bash(composer *)" \
+      "Bash(artisan *)" \
+      "Bash(pint *)" \
+      "Bash(phpunit *)" \
+      "Bash(phpstan *)" \
       "Read" \
       "Write" \
       "Edit" \
