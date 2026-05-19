@@ -2,11 +2,6 @@
   "title": "サンプル: シンプルな <ここに何のアプリか> を作る",
   "context": {
     "background": "なぜこのアプリを作るのか、誰のためかを 1〜2 行で書く",
-    "tech_stack": [
-      "言語・フレームワーク（例: Python 3.12 / FastAPI）",
-      "データストア（例: PostgreSQL 16）",
-      "実行環境（例: docker compose で起動）"
-    ],
     "constraints": [
       "外部 SaaS には接続しない",
       "シークレットはコミットしない"

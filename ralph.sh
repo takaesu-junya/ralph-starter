@@ -6,7 +6,7 @@ set -euo pipefail
 # Usage:
 #   ./ralph.sh <sprint_dir> [max_iterations]
 # Example:
-#   ./ralph.sh ralph/sprints/todo-api-mvp 10
+#   ./ralph.sh ralph/sprints/my-sprint 10
 #
 # このスクリプトは「PRD.json と PROMPT.md と progress.txt とログを合成し、
 # claude CLI に渡してループを回す」というだけの薄いラッパーです。

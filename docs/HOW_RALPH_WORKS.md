@@ -13,7 +13,7 @@
 対話モードの Claude Code で次のように呼び出すと、PRD 草案を 1 問ずつ詰めてくれます:
 
 ```
-/grill-me ralph/sprints/todo-api-mvp/PRD.json の story を 1 つずつ詰めて
+/grill-me ralph/sprints/my-sprint/PRD.json の story を 1 つずつ詰めて
 ```
 
 - 1 度に 1 問だけ聞く

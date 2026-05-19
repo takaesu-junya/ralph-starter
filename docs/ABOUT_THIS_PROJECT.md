@@ -49,7 +49,7 @@ TODO 管理 Web アプリケーション。Laravel の MVC（Routing / Controlle
 | 実行環境 | **Docker Compose 必須**（ホスト側に PHP を入れない） |
 
 スタックを変更する場合は `AGENTS.md`（技術スタック・実コマンド・規約）と
-`ralph/sprints/todo-api-mvp/PRD.json`（受け入れ基準）を書き換える。
+`ralph/sprints/<sprint>/PRD.json`（受け入れ基準）を書き換える。
 
 ## コンテナ必須の方針
 
@@ -83,9 +83,9 @@ ralph-todo-sample/
 │       └── grill-me/                      初期フェーズ用 Skill（Matt Pocock, MIT）
 │           └── SKILL.md
 └── ralph/
-    └── sprints/
-        └── todo-api-mvp/                  既定のスプリント
-            ├── PRD.json                   タスク定義（WHAT・MVC Web アプリ）
+    └── sprints/                          利用者が自分の sprint をここに作る
+        └── <sprint-name>/                ひな形は .claude/skills/ralph/templates/
+            ├── PRD.json                   タスク定義（WHAT）
             ├── PROMPT.md                  Ralph への常駐指示書（ループ手続き）
             ├── progress.txt               Ralph が追記する進捗ログ
             └── decisions.md               世代をまたぐ設計判断

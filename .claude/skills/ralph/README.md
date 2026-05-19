@@ -59,7 +59,7 @@ Skill 全体像を把握するためのファイル、という役割分担で�
 ```bash
 ./ralph.sh <sprint_dir> [max_iterations]
 # 例
-./ralph.sh ralph/sprints/todo-api-mvp 10
+./ralph.sh ralph/sprints/my-sprint 10
 ```
 
 ## 各ファイルの役割
@@ -71,7 +71,7 @@ Skill 全体像を把握するためのファイル、という役割分担で�
 ```json
 {
   "title": "...",
-  "context": { "background": "...", "tech_stack": [...] },
+  "context": { "background": "...", "constraints": [...] },
   "stories": [
     {
       "id": 1,

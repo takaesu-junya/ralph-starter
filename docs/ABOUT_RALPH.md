@@ -29,7 +29,7 @@ Ralph はループ中に質問してこない（headless 実行）ので、`PRD.
 ある場合は、対話モードの Claude Code で grill-me skill を呼んで詰める。
 
 ```
-/grill-me ralph/sprints/todo-api-mvp/PRD.json の story を 1 つずつ詰めて
+/grill-me ralph/sprints/my-sprint/PRD.json の story を 1 つずつ詰めて
 ```
 
 - 1 度に 1 問だけ聞いてくる
@@ -43,21 +43,25 @@ Ralph はループ中に質問してこない（headless 実行）ので、`PRD.
 
 ## Step 1: PRD.json を確定する
 
-既定の `ralph/sprints/todo-api-mvp/PRD.json` は、Laravel MVC + Blade でブラウザから
-操作できる TODO 管理 Web アプリ（CRUD + PostgreSQL）の 7 story 構成。そのまま回せば
-Ralph が一気通貫で作る。
+このリポジトリは「Ralph パターンの汎用スターター」として配布している。
+何を作るかは利用者ごとに違うので、`ralph/sprints/` 配下に既定のスプリントは置いていない。
+ひな形は [`.claude/skills/ralph/templates/`](../.claude/skills/ralph/templates/) にある:
 
-別のプロジェクトを動かしたい場合は、スプリントディレクトリをコピーして書き換える:
+- `PRD.example.json` — タスク定義の雛形
+- `PROMPT.example.md` — 常駐指示書の雛形
+
+自分の sprint ディレクトリを作って、ひな形をコピーするところから始める:
 
 ```bash
-cp -r ralph/sprints/todo-api-mvp ralph/sprints/my-new-sprint
-# ralph/sprints/my-new-sprint/PRD.json の stories[] を書き換える
-# ralph/sprints/my-new-sprint/PROMPT.md のループ手続きを必要に応じて調整する
+mkdir -p ralph/sprints/my-sprint
+cp .claude/skills/ralph/templates/PRD.example.json    ralph/sprints/my-sprint/PRD.json
+cp .claude/skills/ralph/templates/PROMPT.example.md   ralph/sprints/my-sprint/PROMPT.md
+# あとは PRD.json の title / stories[] を自分のプロジェクト向けに書き換える
 ```
 
 PRD のスキーマや `passes` フラグの扱いは
-[`.claude/skills/ralph/README.md`](.claude/skills/ralph/README.md) を参照。
-ひな形は [`.claude/skills/ralph/templates/`](.claude/skills/ralph/templates/) にある。
+[`.claude/skills/ralph/README.md`](../.claude/skills/ralph/README.md) を参照。
+PRD 草案に不安があれば、Step 0 の grill-me で詰めてから Step 2 へ進む。
 
 ## Step 2: Ralph を起動する
 
@@ -67,7 +71,7 @@ claude --version
 docker --version
 
 # Ralph を起動（最大 10 イテレーション）
-./ralph.sh ralph/sprints/todo-api-mvp 10
+./ralph.sh ralph/sprints/my-sprint 10
 ```
 
 ターミナルに Claude の出力が流れ始める。1 イテレーションごとに次が走る:
@@ -93,9 +97,9 @@ docker --version
 別ターミナルで進捗を眺めるなら:
 
 ```bash
-tail -f ralph/sprints/todo-api-mvp/progress.txt
-tail -f ralph/sprints/todo-api-mvp/ralph-output.log
-jq '.stories[] | {id, title, passes}' ralph/sprints/todo-api-mvp/PRD.json
+tail -f ralph/sprints/my-sprint/progress.txt
+tail -f ralph/sprints/my-sprint/ralph-output.log
+jq '.stories[] | {id, title, passes}' ralph/sprints/my-sprint/PRD.json
 ```
 
 ## このリポジトリ固有のカスタマイズポイント
