@@ -1,8 +1,16 @@
-# Ralph Skill
+# ralph-plan Skill
 
-このディレクトリは Claude Code の Skill としての Ralph 本体です。
-ここを読めば「Ralph パターンとは何か」「Skill としてどう構成されているか」
-「実運用ファイル（PRD.json / PROMPT.md 等）にどんな約束ごとがあるか」が分かります。
+使い方
+
+```sh
+/ralph-plan このリポジトリで TODO アプリの Ralph スプリントを準備して
+```
+
+このディレクトリは Claude Code の Skill としての **ralph-plan** 本体です。
+Ralph 実行前の **準備フェーズ**（壁打ち + PRD.json / PROMPT.md の生成）を担当します。
+
+実装ループそのもの（1 イテ 1 ストーリーの自律実行）は別フェーズで、リポジトリルートの
+`ralph.sh` がやります。このスキルはそこに渡すための入力を整える役割。
 
 > このリポジトリ固有の使い方チュートリアル（どのコマンドを叩くか・どこをコピーするか）は、
 > リポジトリの [`docs/ABOUT_RALPH.md`](../../../docs/ABOUT_RALPH.md) を参照。
@@ -24,43 +32,48 @@
 
 Claude Code 固有ではなく、Codex / Gemini CLI / opencode でも同じパターンが成立します。
 
+## 2 つのフェーズ
+
+Ralph パターンの運用は明確に 2 フェーズに分かれます。このスキルが面倒を見るのは前者です。
+
+| フェーズ | 担当 | 役割 |
+| --- | --- | --- |
+| 準備（壁打ち + 入力生成） | **このスキル** (`ralph-plan`) | ユーザーと対話し PRD.json / PROMPT.md を作る |
+| 実装ループ | `ralph.sh` + 同梱 `PROMPT.md` | headless で 1 イテ 1 ストーリーを完遂 |
+
+なぜ分けるのか:
+
+- 準備フェーズは **対話モード**（ユーザーに質問できる）
+- 実装フェーズは **headless モード**（質問できない）
+- 設計判断を先に潰しておかないと、ループ中に世代ごとの解釈ブレとして発現する
+
 ## このディレクトリの構成
 
 ```
-.claude/skills/ralph/
+.claude/skills/ralph-plan/
 ├── README.md                  このファイル（人間が読む）
-├── SKILL.md                   Claude が読む規約
+├── SKILL.md                   Claude が読む規約（準備フェーズの手順）
 └── templates/
     ├── PRD.example.json       新しいスプリントを作るときの PRD ひな形
-    └── PROMPT.example.md      PROMPT.md のひな形
+    └── PROMPT.example.md      PROMPT.md のひな形（ループ手続き）
 ```
 
 `SKILL.md` は Claude Code が Skill として読み込むファイル、`README.md` は人間が
 Skill 全体像を把握するためのファイル、という役割分担です。
 
-## スプリントディレクトリの構造
+## 生成されるスプリントディレクトリ
 
-このスキルが前提とするレイアウト:
+このスキルが完了すると、次のレイアウトができている:
 
 ```
-<repo-root>/
-├── ralph.sh                       実行ループ（ループ・終了判定・合成だけ）
-└── ralph/
-    └── sprints/
-        └── <sprint-name>/
-            ├── PRD.json           タスク定義（passes フラグで進捗管理）
-            ├── PROMPT.md          常駐指示書（AI 指示の唯一の出所）
-            ├── progress.txt       AI が追記する作業ログ
-            └── decisions.md       世代をまたぐ設計判断
+<repo-root>/ralph/sprints/<sprint-name>/
+├── PRD.json           タスク定義（passes フラグで進捗管理）
+├── PROMPT.md          常駐指示書（ループ手続き）
+├── progress.txt       空ファイル（Ralph が追記していく）
+└── decisions.md       空ファイル（Ralph が追記していく）
 ```
 
-起動コマンド:
-
-```bash
-./ralph.sh <sprint_dir> [max_iterations]
-# 例
-./ralph.sh ralph/sprints/my-sprint 10
-```
+そのあとに `./ralph.sh ralph/sprints/<sprint-name> [N]` でループに入る。
 
 ## 各ファイルの役割
 
@@ -114,34 +127,51 @@ AGENTS.md に書くべき内容（プロジェクト全体）:
 
 ひな形: [`templates/PROMPT.example.md`](templates/PROMPT.example.md)
 
-### progress.txt — 作業ログ
+### progress.txt — 作業ログ（ループ中に Ralph が書く）
 
-AI が各イテレーションで「何を / どう / なぜ」を 5 行以内で追記していくファイル。
-次イテレーションの AI が読む前提で書く。上書き禁止・追記のみ。
+Ralph が各イテレーションで「何を / どう / なぜ」を 5 行以内で追記していくファイル。
+次イテレーションの自分が読む前提で書く。上書き禁止・追記のみ。
 
-### decisions.md — 設計判断ログ
+このスキルは **空ファイルを用意するだけ**。中身は Ralph が書く。
 
-世代をまたいで持ち越したい判断・トレードオフ・禁忌事項を AI がここに残す。
+### decisions.md — 設計判断ログ（ループ中に Ralph が書く）
+
+世代をまたいで持ち越したい判断・トレードオフ・禁忌事項を Ralph がここに残す。
 
 - 採用した方式と却下した代替案
 - 一度試して失敗した方法（次の自分が同じ罠を踏まないように）
 - 後続 story に影響する規約
 
-## ralph.sh の責務分離
+このスキルは **空ファイルを用意するだけ**。中身は Ralph が書く。
 
-`ralph.sh` は意図的に薄く保たれている:
+## grill-me との関係
+
+同梱の [`grill-me` skill](../grill-me/SKILL.md)（Matt Pocock 作・MIT ライセンス）は
+「対話で意思決定木を 1 問ずつ潰す」という汎用パターンです。`ralph-plan` はその
+パターンを Ralph 専用にラップしたもの:
+
+| | `grill-me` | `ralph-plan` |
+| --- | --- | --- |
+| 範囲 | 任意の plan / design | Ralph スプリントの準備 |
+| 出力 | 合意された理解（暗黙） | `PRD.json` / `PROMPT.md` / 空の状態ファイル |
+| ハンドオフ先 | 自由 | `./ralph.sh` |
+
+`ralph-plan` が内部で `grill-me` 流の手続きを採用しているので、
+利用者が直接 `grill-me` を呼ぶ必要はない。ただし PRD 確定後にもう一段
+詰めたい場合や、Ralph と無関係な設計検討では `grill-me` を直接使ってよい。
+
+## 責務分離（このスキル / ralph.sh / PROMPT.md / AGENTS.md）
 
 | 責務 | 担当 |
 | --- | --- |
+| ユーザーと壁打ち、入力ファイル生成 | **このスキル** (`ralph-plan`) |
 | ループ・終了判定・合成プロンプト生成 | `ralph.sh` |
 | AI への指示（1 イテ 1 ストーリー、完了シグナル、headless 等） | `PROMPT.md` |
 | 何を作るか・進捗管理 | `PRD.json` |
+| 技術スタック・規約・実コマンド | `AGENTS.md`（リポジトリルート） |
 | 副作用（PR 作成、issue 連携、外部通知 等） | `PROMPT.md` 経由で AI に `gh` 等を叩かせる |
 
-`ralph.sh` に AI 指示を混ぜると、再利用しにくくなり、`PROMPT.md` だけ差し替えれば
-別プロジェクトで動くという利点が失われます。
-
-## ループ完了の判定
+## ループ完了の判定（参考）
 
 `ralph.sh` の終了条件はシンプルに:
 
@@ -153,27 +183,17 @@ AI 側に「全部終わったらこの文字列を出力しろ」と指示す�
 AI の主観的な完了判定を読めるようにしている。同じパターンは Codex / Gemini CLI /
 opencode でも使える。
 
-## 初期フェーズとの組み合わせ（grill-me）
+## やってはいけないこと（このスキルとして）
 
-ループに入る前に、`PRD.json` の各 story が「ループに任せて安全」な粒度に
-解像していることが重要です。Ralph はループ中に質問できない（headless）ので、
-あいまいさは事前に潰しておく必要があります。
-
-このリポジトリには [grill-me skill](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md)
-（Matt Pocock 作・MIT ライセンス）を同梱しており、`PRD.json` 確定前に
-対話モードの Claude Code で呼び出して使えるようにしてあります。
-
-## やってはいけないこと（スキル共通）
-
-- `ralph.sh` / `SKILL.md` / `PROMPT.md` をタスクと無関係に書き換える
-- 1 イテレーションで複数 story を進める
-- 受け入れ基準を満たさないまま `passes: true` に書き換える
-- `<promise>COMPLETE</promise>` を未完成のまま出力する
-- `progress.txt` / `decisions.md` を上書き・削除する（追記のみ）
+- `ralph.sh` / `AGENTS.md` を勝手に書き換える（規約変更が必要ならまずユーザーと合意する）
+- 複数質問を一度に投げる（1 度に 1 つ）
+- ユーザーに聞かずに勝手に PRD を確定する
+- 受け入れ基準を曖昧なまま残す（「UX が良い」「読みやすい」のような真偽判定不能なもの）
 
 ## 参考
 
 - 本家解説 (Geoffrey Huntley): https://ghuntley.com/ralph/
 - 実践 Tips (aihero.dev): https://www.aihero.dev/posts/11-tips-for-ai-coding-with-ralph-wiggum
 - 歴史 (humanlayer): https://www.humanlayer.dev/blog/brief-history-of-ralph
+- Matt Pocock の skills 集: https://github.com/mattpocock/skills
 - 命名の話 (VentureBeat): https://venturebeat.com/technology/how-ralph-wiggum-went-from-the-simpsons-to-the-biggest-name-in-ai-right-now/

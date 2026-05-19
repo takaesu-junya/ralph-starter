@@ -2,7 +2,7 @@
 
 このリポジトリで Ralph（自律タスク実行ループ）を運用するための手順書。
 Ralph パターンそのものの仕様や、Skill の中身は
-[`.claude/skills/ralph/README.md`](../.claude/skills/ralph/README.md) に委ねている。
+[`.claude/skills/ralph-plan/README.md`](../.claude/skills/ralph-plan/README.md) に委ねている。
 仕組みの図解は [`HOW_RALPH_WORKS.md`](./HOW_RALPH_WORKS.md)。
 
 ここでは「このリポジトリのファイルを使って、どの順で何をすればよいか」だけを書く。
@@ -10,10 +10,7 @@ Ralph パターンそのものの仕様や、Skill の中身は
 ## 全体の流れ
 
 ```
-[Step 0] grill-me で PRD を詰める   ← 任意。PRD に自信があれば飛ばしてよい
-              │
-              ▼
-[Step 1] PRD.json を確定する
+[Step 1] /ralph-plan で壁打ち → PRD.json / PROMPT.md を生成
               │
               ▼
 [Step 2] ./ralph.sh でループを回す  ← ここから先は自律実行
@@ -22,46 +19,30 @@ Ralph パターンそのものの仕様や、Skill の中身は
 [Step 3] 全 story が passes: true になりループ終了
 ```
 
-## Step 0（任意）: grill-me で PRD を詰める
+## Step 1: ralph-plan で PRD.json を作る
 
-Ralph はループ中に質問してこない（headless 実行）ので、`PRD.json` に
-あいまいさが残っていると世代ごとに別解釈で実装が振れる。確信が持てない story が
-ある場合は、対話モードの Claude Code で grill-me skill を呼んで詰める。
+対話モードの Claude Code で `ralph-plan` skill を呼び出す。スキルは
+ユーザーに 1 問ずつ尋問しながら、最終的に `ralph/sprints/<sprint-name>/` に
+次の 4 ファイルを置く:
+
+- `PRD.json` — 受け入れ基準つきタスク定義
+- `PROMPT.md` — ループ手続き（スプリント固有）
+- `progress.txt` — 空（Ralph が追記する）
+- `decisions.md` — 空（Ralph が追記する）
+
+呼び出し方:
 
 ```
-/grill-me ralph/sprints/my-sprint/PRD.json の story を 1 つずつ詰めて
+/ralph-plan このリポジトリで <作りたいもの> の Ralph スプリントを準備して
 ```
 
-- 1 度に 1 問だけ聞いてくる
-- 各質問に「私のおすすめはこれ」を添えてくる
-- コードベースを読めば答えられる質問は、こちらに聞かずに読みに行く
+スキルの中身（手順・不変条件）は
+[`.claude/skills/ralph-plan/SKILL.md`](../.claude/skills/ralph-plan/SKILL.md) を参照。
 
-意思決定の枝が解消されたら `PRD.json` を保存して Step 1 へ。
-
-> grill-me skill は Matt Pocock 作・MIT ライセンスで `.claude/skills/grill-me/` に
-> そのまま同梱している。原典: https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md
-
-## Step 1: PRD.json を確定する
-
-このリポジトリは「Ralph パターンの汎用スターター」として配布している。
-何を作るかは利用者ごとに違うので、`ralph/sprints/` 配下に既定のスプリントは置いていない。
-ひな形は [`.claude/skills/ralph/templates/`](../.claude/skills/ralph/templates/) にある:
-
-- `PRD.example.json` — タスク定義の雛形
-- `PROMPT.example.md` — 常駐指示書の雛形
-
-自分の sprint ディレクトリを作って、ひな形をコピーするところから始める:
-
-```bash
-mkdir -p ralph/sprints/my-sprint
-cp .claude/skills/ralph/templates/PRD.example.json    ralph/sprints/my-sprint/PRD.json
-cp .claude/skills/ralph/templates/PROMPT.example.md   ralph/sprints/my-sprint/PROMPT.md
-# あとは PRD.json の title / stories[] を自分のプロジェクト向けに書き換える
-```
-
-PRD のスキーマや `passes` フラグの扱いは
-[`.claude/skills/ralph/README.md`](../.claude/skills/ralph/README.md) を参照。
-PRD 草案に不安があれば、Step 0 の grill-me で詰めてから Step 2 へ進む。
+> Ralph はループ中に質問できない（headless 実行）ので、ここで意思決定木を潰し切る
+> 必要がある。スキルは内部で `grill-me`（Matt Pocock 作・MIT、`.claude/skills/grill-me/`
+> に同梱）と同じ「1 問ずつ＋おすすめ提示」の手法を使う。Ralph と無関係な設計検討で
+> grill-me を直接呼びたい場合は `/grill-me ...` でも使える。
 
 ## Step 2: Ralph を起動する
 
@@ -100,6 +81,19 @@ docker --version
 tail -f ralph/sprints/my-sprint/progress.txt
 tail -f ralph/sprints/my-sprint/ralph-output.log
 jq '.stories[] | {id, title, passes}' ralph/sprints/my-sprint/PRD.json
+```
+
+## 手動でひな形をコピーしたい場合
+
+`/ralph-plan` を使わず、自分でひな形からスプリントを作りたい場合:
+
+```bash
+mkdir -p ralph/sprints/my-sprint
+cp .claude/skills/ralph-plan/templates/PRD.example.json    ralph/sprints/my-sprint/PRD.json
+cp .claude/skills/ralph-plan/templates/PROMPT.example.md   ralph/sprints/my-sprint/PROMPT.md
+touch ralph/sprints/my-sprint/progress.txt
+touch ralph/sprints/my-sprint/decisions.md
+# あとは PRD.json の title / stories[] を自分のプロジェクト向けに書き換える
 ```
 
 ## このリポジトリ固有のカスタマイズポイント

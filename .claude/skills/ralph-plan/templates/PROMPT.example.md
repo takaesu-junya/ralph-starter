@@ -33,10 +33,39 @@ decisions.md に追記してください。
 5. progress.txt に「何を / どう / なぜ」を 5 行以内で追記する
 6. 次に持ち越したい設計判断があれば decisions.md に追記する
 
+## 1 story を完了とみなす条件（縦スライス）
+
+`passes: true` を立てる前に、以下がすべて成り立っていること。1 つでも欠ければ
+passes は立てず、同イテレーション内で不足分を埋める。
+
+- **feature test が 1 本以上存在する**: `tests/Feature/` 配下に、その story の
+  挙動を検証するテストが追加されている
+- **テストが HTTP 経由で検証している**: `$this->get(...)` / `$this->post(...)` /
+  `$this->patch(...)` / `$this->delete(...)` などで実際のリクエスト〜レスポンスを
+  通している（モデルの単体テストや、controller を直接呼ぶテストだけでは不十分）
+- **テストが緑**: `docker compose exec app php artisan test` が全件成功
+- **format / 静的解析が緑**: `pint --test` と `phpstan analyse` が緑
+- **レイヤ横断の変更が同一コミットに含まれている**: route / controller / model /
+  migration / blade / FormRequest のうち、その story が必要とするものすべてが
+  同じコミット内にある（「次の story で controller を作る」のような横割り完了は禁止）
+
+横割り完了の例（やってはいけない）:
+
+- migration だけ追加して passes: true
+- controller のスケルトンだけ追加して passes: true
+- blade テンプレートだけ追加して passes: true
+
+縦スライス完了の例（OK）:
+
+- `GET /todos` の story を完了するために、migration / Todo モデル / route /
+  TodoController@index / `resources/views/todos/index.blade.php` / feature test
+  を **同一コミット** で追加し、テスト緑
+
 ## やってはいけないこと
 
 - PROMPT.md / AGENTS.md / ralph.sh の書き換え
 - 受け入れ基準を満たさないまま passes: true にすること
+- 縦スライス条件（上記）を満たさないまま passes: true にすること
 - 複数 story を同じイテレーションで進めること
 - シークレット（API キー、DB パスワード等）のコミット
 

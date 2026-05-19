@@ -76,15 +76,15 @@ ralph-todo-sample/
 │   └── HOW_RALPH_WORKS.md                 Ralph の仕組みの図解
 ├── .claude/
 │   └── skills/
-│       ├── ralph/                         Ralph Skill（仕様は ralph/README.md）
+│       ├── ralph-plan/                    準備フェーズ用 Skill（仕様は ralph-plan/README.md）
 │       │   ├── README.md                  Ralph パターンの説明
-│       │   ├── SKILL.md                   Claude が読む規約
+│       │   ├── SKILL.md                   Claude が読む規約（壁打ち + PRD 生成手順）
 │       │   └── templates/                 PRD / PROMPT のひな形
-│       └── grill-me/                      初期フェーズ用 Skill（Matt Pocock, MIT）
+│       └── grill-me/                      汎用の意思決定詰め込み Skill（Matt Pocock, MIT）
 │           └── SKILL.md
 └── ralph/
-    └── sprints/                          利用者が自分の sprint をここに作る
-        └── <sprint-name>/                ひな形は .claude/skills/ralph/templates/
+    └── sprints/                          /ralph-plan が利用者の sprint をここに作る
+        └── <sprint-name>/                ひな形は .claude/skills/ralph-plan/templates/
             ├── PRD.json                   タスク定義（WHAT）
             ├── PROMPT.md                  Ralph への常駐指示書（ループ手続き）
             ├── progress.txt               Ralph が追記する進捗ログ

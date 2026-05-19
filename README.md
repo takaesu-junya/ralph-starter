@@ -10,5 +10,5 @@ TODO 管理 Web アプリケーション。Laravel MVC で実装し、ブラウ�
 | --- | --- |
 | このプロジェクトは何で、技術スタックは何か | [docs/ABOUT_THIS_PROJECT.md](docs/ABOUT_THIS_PROJECT.md) |
 | このリポジトリで Ralph をどう運用するか（手順書） | [docs/ABOUT_RALPH.md](docs/ABOUT_RALPH.md) |
-| Ralph パターンそのものの仕様 | [.claude/skills/ralph/README.md](.claude/skills/ralph/README.md) |
+| Ralph パターンそのものの仕様 | [.claude/skills/ralph-plan/README.md](.claude/skills/ralph-plan/README.md) |
 | Ralph がこのリポジトリでどう動くか（図解） | [docs/HOW_RALPH_WORKS.md](docs/HOW_RALPH_WORKS.md) |

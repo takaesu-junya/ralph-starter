@@ -14,7 +14,10 @@ If a question can be answered by exploring the codebase, explore the codebase in
 <!--
 Source: https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md
 License: MIT (© 2026 Matt Pocock)
-Imported verbatim. このサンプルでは Ralph の「PRD.json 確定前」フェーズで使う:
-ふわっとした要件を grill-me で詰めて意思決定を解像してから PRD.json に落とし込み、
-ralph.sh に渡す。詳細は README.md / docs/HOW_RALPH_WORKS.md 参照。
+Imported verbatim. 汎用の「意思決定木を 1 問ずつ潰す」スキル。
+Ralph スプリント準備の文脈では、`ralph-plan` スキルが内部的にこの手法を採用しているので、
+PRD.json を作りたい場合は `/ralph-plan` 経由で呼び出すと、最終的に
+ralph/sprints/<sprint-name>/ に成果物が出力される。Ralph と無関係な設計検討では
+このスキルを直接 `/grill-me` で呼んでよい。詳細は ../ralph-plan/README.md と
+../../../docs/HOW_RALPH_WORKS.md を参照。
 -->

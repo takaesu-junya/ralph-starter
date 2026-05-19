@@ -2,26 +2,31 @@
 
 このリポジトリが Ralph をどう動かしているかを 1 ページで説明します。
 
-## 初期フェーズ: grill-me で PRD を詰める（任意・推奨）
+## 準備フェーズ: ralph-plan で PRD.json を作る
 
 ループに入る前に、`PRD.json` の各 story が「ループに任せて安全」と言える粒度まで
 解像していることが重要です。Ralph はループ中に質問してこない（headless 実行）ので、
 あいまいさを残したまま回すと、世代ごとに別の解釈で実装が振れます。
 
-このリポジトリには [grill-me skill](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md)
-（Matt Pocock 作・MIT ライセンス）を同梱しています。
-対話モードの Claude Code で次のように呼び出すと、PRD 草案を 1 問ずつ詰めてくれます:
+このリポジトリには `ralph-plan` skill を同梱しており、対話モードの Claude Code で
+呼び出すと、ユーザーに 1 問ずつ尋問しながら最終的に
+`ralph/sprints/<sprint-name>/` に PRD.json / PROMPT.md / 空の progress.txt /
+空の decisions.md を生成します。
 
 ```
-/grill-me ralph/sprints/my-sprint/PRD.json の story を 1 つずつ詰めて
+/ralph-plan このリポジトリで <作りたいもの> の Ralph スプリントを準備して
 ```
+
+スキルの内部では Matt Pocock の [grill-me skill](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md)
+（MIT ライセンス、`.claude/skills/grill-me/` に同梱）と同じ手法を採用しています:
 
 - 1 度に 1 問だけ聞く
-- それぞれに「私のおすすめはこれ」を添えてくる
+- それぞれに「私のおすすめはこれ」を添える
 - コードベースを読めば答えられる質問は、こちらに聞かずに読みに行く
 
-意思決定の枝がすべて解消されたら PRD.json を確定し、`./ralph.sh` でループに入ります。
-自分で書いた PRD に自信があるなら飛ばして構いません。
+意思決定の枝がすべて解消されたら、ralph-plan が成果物をディスクに書き出し、
+最後に `./ralph.sh ralph/sprints/<sprint-name> [N]` の起動コマンドを提示します。
+Ralph と無関係な設計検討で grill-me を直接呼びたい場合は `/grill-me` で使えます。
 
 ## ループフェーズの全体像
 
