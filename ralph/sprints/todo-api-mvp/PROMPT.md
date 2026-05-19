@@ -1,4 +1,4 @@
-# PROMPT.md — TODO 管理 API MVP スプリント
+# PROMPT.md — TODO 管理 Web アプリ MVP スプリント
 
 このファイルは Ralph が毎イテレーション読み込む常駐指示書（ループ手続き）です。
 
@@ -8,8 +8,8 @@
 
 ## このスプリントの目的
 
-`docker compose up -d` だけで動く TODO 管理 API（CRUD + PostgreSQL）の MVP を、
-受け入れ基準を満たす最小実装で完成させること。
+`docker compose up -d` の後ブラウザで `/todos` を開くと操作できる TODO 管理 Web アプリ
+（Laravel MVC + Blade + PostgreSQL）の MVP を、受け入れ基準を満たす最小実装で完成させること。
 
 ## 実行モード
 
@@ -22,7 +22,7 @@
 1. PRD.json の `passes: false` の中から **id が最小の 1 件** を選ぶ
 2. その story の `criteria[]` をすべて満たす実装をする（規約・コマンドは AGENTS.md 参照）
 3. AGENTS.md の「実コマンド」に従って format / lint / test を緑にする
-4. `docker compose up -d` 後にローカル疎通確認できる範囲は curl で叩いて確認する
+4. `docker compose up -d` 後にローカル疎通確認できる範囲は curl で `/todos` 等を叩いて HTTP 応答を確認する（ブラウザ自体は人間が後で開く）
 5. `git add -A` して、コミットメッセージ `feat: <story title> [story-<id>]` でコミット
 6. PRD.json の該当 story の `passes` を `true` に書き換えてコミット（同じコミットに混ぜてよい）
 7. `progress.txt` に、このイテレーションで「何を / どう / なぜ」を 5 行以内で追記

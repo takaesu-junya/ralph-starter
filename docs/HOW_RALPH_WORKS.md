@@ -1,6 +1,6 @@
 # Ralph Wiggum パターンの仕組み
 
-このサンプルが何をやっているかを 1 ページで説明します。
+このリポジトリが Ralph をどう動かしているかを 1 ページで説明します。
 
 ## 初期フェーズ: grill-me で PRD を詰める（任意・推奨）
 
@@ -8,7 +8,7 @@
 解像していることが重要です。Ralph はループ中に質問してこない（headless 実行）ので、
 あいまいさを残したまま回すと、世代ごとに別の解釈で実装が振れます。
 
-このサンプルには [grill-me skill](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md)
+このリポジトリには [grill-me skill](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md)
 （Matt Pocock 作・MIT ライセンス）を同梱しています。
 対話モードの Claude Code で次のように呼び出すと、PRD 草案を 1 問ずつ詰めてくれます:
 
@@ -93,8 +93,9 @@ Claude Code 固有ではなく、Codex / Gemini CLI / opencode でも同じパ�
 
 ## どこをカスタマイズすればよいか
 
-- **題材を変える**: `ralph/sprints/<new-sprint>/PRD.json` を新しく作る
-- **ルールを変える**: `ralph/sprints/<sprint>/PROMPT.md` のローカルルールを書き換える
+- **別プロジェクトを動かす**: `ralph/sprints/<new-sprint>/PRD.json` を新しく作る
+- **ループ手続きを変える**: `ralph/sprints/<sprint>/PROMPT.md` を書き換える
+- **規約・実コマンドを変える**: ルートの `AGENTS.md` を書き換える
 - **使えるツールを増やす**: `ralph.sh` の `--allowedTools` リストに追加する
 - **ループ回数を増やす**: `./ralph.sh <sprint> 50` のように第 2 引数を増やす
 
@@ -102,7 +103,7 @@ Claude Code 固有ではなく、Codex / Gemini CLI / opencode でも同じパ�
 
 ## さらに進んだ使い方
 
-このサンプルは「最小構成」です。本格運用するなら次のような拡張が考えられます：
+現状の構成は最小です。拡張するなら次のような方向があります:
 
 - GitHub issue を起点に PRD.json を自動生成
 - ストーリー完了時に sub-issue を自動 Close
@@ -110,4 +111,4 @@ Claude Code 固有ではなく、Codex / Gemini CLI / opencode でも同じパ�
 - 別エージェントで PRD 草案を批判・改善（adversarial review）
 - 直近イテレーションのコミット差分に対して CodeRabbit などのレビュアーを挟む
 
-最小サンプルから始めて、必要になった機構だけ足していくのが楽しいです。
+最小構成から始めて、必要になった機構だけ足していくのが運用しやすい。

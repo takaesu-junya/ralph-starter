@@ -5,7 +5,7 @@
 「実運用ファイル（PRD.json / PROMPT.md 等）にどんな約束ごとがあるか」が分かります。
 
 > このリポジトリ固有の使い方チュートリアル（どのコマンドを叩くか・どこをコピーするか）は、
-> リポジトリルートの [`ABOUT_RALPH.md`](../../../ABOUT_RALPH.md) を参照。
+> リポジトリの [`docs/ABOUT_RALPH.md`](../../../docs/ABOUT_RALPH.md) を参照。
 > 仕組みの図解は [`docs/HOW_RALPH_WORKS.md`](../../../docs/HOW_RALPH_WORKS.md)。
 
 ## Ralph Wiggum パターンとは

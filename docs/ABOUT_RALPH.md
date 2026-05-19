@@ -1,9 +1,9 @@
 # ABOUT_RALPH
 
-このリポジトリで Ralph（自律タスク実行ループ）を実際に使うためのチュートリアル。
-Ralph パターンそのものの説明や、Skill の中身は
-[`.claude/skills/ralph/README.md`](.claude/skills/ralph/README.md) に委ねている。
-仕組みの図解は [`docs/HOW_RALPH_WORKS.md`](docs/HOW_RALPH_WORKS.md)。
+このリポジトリで Ralph（自律タスク実行ループ）を運用するための手順書。
+Ralph パターンそのものの仕様や、Skill の中身は
+[`.claude/skills/ralph/README.md`](../.claude/skills/ralph/README.md) に委ねている。
+仕組みの図解は [`HOW_RALPH_WORKS.md`](./HOW_RALPH_WORKS.md)。
 
 ここでは「このリポジトリのファイルを使って、どの順で何をすればよいか」だけを書く。
 
@@ -43,15 +43,16 @@ Ralph はループ中に質問してこない（headless 実行）ので、`PRD.
 
 ## Step 1: PRD.json を確定する
 
-`ralph/sprints/todo-api-mvp/PRD.json` をそのまま使えば、TODO 管理 API
-（CRUD + PostgreSQL）の 7 story を Ralph に作らせる体験ができる。
+既定の `ralph/sprints/todo-api-mvp/PRD.json` は、Laravel MVC + Blade でブラウザから
+操作できる TODO 管理 Web アプリ（CRUD + PostgreSQL）の 7 story 構成。そのまま回せば
+Ralph が一気通貫で作る。
 
-題材を変えたい場合は、このスプリントディレクトリをコピーして自分の題材を書く:
+別のプロジェクトを動かしたい場合は、スプリントディレクトリをコピーして書き換える:
 
 ```bash
 cp -r ralph/sprints/todo-api-mvp ralph/sprints/my-new-sprint
 # ralph/sprints/my-new-sprint/PRD.json の stories[] を書き換える
-# ralph/sprints/my-new-sprint/PROMPT.md のローカルルールを書き換える
+# ralph/sprints/my-new-sprint/PROMPT.md のループ手続きを必要に応じて調整する
 ```
 
 PRD のスキーマや `passes` フラグの扱いは
@@ -105,7 +106,7 @@ jq '.stories[] | {id, title, passes}' ralph/sprints/todo-api-mvp/PRD.json
   `ralph/sprints/<sprint>/PROMPT.md` に書く
 - **使えるツールを増やしたい**: `ralph.sh` の `--allowedTools` リストに追加する
 - **ループ回数を増やしたい**: `./ralph.sh <sprint_dir> 50` のように第 2 引数を増やす
-- **題材を変えたい**: 上記「Step 1」のディレクトリコピー方式
+- **別プロジェクトを動かしたい**: 上記「Step 1」のディレクトリコピー方式
 
 ## トラブルシュート
 

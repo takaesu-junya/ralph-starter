@@ -13,6 +13,13 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - `ralph/sprints/<sprint>/PRD.json` — **WHAT**: 何を作るか・受け入れ基準
 - `ralph/sprints/<sprint>/PROMPT.md` — **ループ手続き**: 1 イテ 1 ストーリー、完了シグナル、headless 等
 
+## このプロジェクトの性格
+
+- Laravel 11 を **フルスタック MVC フレームワーク** として使う
+- 画面はサーバサイドレンダリングの Blade ビュー
+- ユーザはブラウザから操作する（JSON API ではない）
+- SPA / フロントエンドフレームワーク（Vue / React / Inertia / Livewire）は使わない
+
 ## 実行環境（必須）
 
 **すべての PHP / Composer / Artisan コマンドは Docker Compose コンテナ内で実行する**。
@@ -22,12 +29,13 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 ## 技術スタック
 
 - PHP 8.3
-- Laravel 11（HTTP / フレームワーク）
+- Laravel 11（フルスタック MVC）
 - Eloquent（ORM・Laravel 同梱）
+- Blade（ビューエンジン・Laravel 同梱）
 - Laravel Migrations（マイグレーション・`php artisan migrate`）
 - PostgreSQL 16（docker compose で起動）
 - Composer（パッケージ管理）
-- PHPUnit（テスト・Laravel 同梱）
+- PHPUnit（テスト・Laravel 同梱、feature test 中心）
 - Laravel Pint（フォーマッタ）
 - Larastan / PHPStan（静的解析）
 
@@ -48,6 +56,7 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - テスト: `docker compose exec app php artisan test`
 - マイグレーション適用: `docker compose exec app php artisan migrate`
 - マイグレーション生成: `docker compose exec app php artisan make:migration <name>`
+- リソースコントローラ生成: `docker compose exec app php artisan make:controller <Name>Controller --resource --model=<Model>`
 - 任意の Artisan: `docker compose exec app php artisan <command>`
 
 ## コーディング規約
@@ -55,12 +64,27 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - PHP は PSR-12 準拠（Pint のデフォルトプリセットで自動整形）
 - クラス名は PascalCase、メソッド名は camelCase、DB カラムは snake_case
 - 不要なコメントは書かない。命名で説明できる範囲は命名で済ます
+- ルートは `routes/web.php` に書く（`api.php` は使わない）
+- コントローラは Laravel のリソースコントローラ規約（index/create/store/show/edit/update/destroy）に従う
+- バリデーションは FormRequest クラスに切り出す（コントローラに長いルールを書かない）
 
-## API 規約
+## Web / ビュー規約
 
-- レスポンスは JSON。日時は ISO 8601 (UTC)
-- HTTP ステータスは 201 (Create) / 200 (Read, Update) / 204 (Delete) / 404 / 422 を守る
-- バリデーション失敗時は Laravel の FormRequest で 422 を返す
+- 画面遷移は伝統的なサーバサイドレンダリング（Post-Redirect-Get）。POST/PATCH/DELETE 後は
+  `redirect()->route(...)` で 302 リダイレクトする
+- レイアウトは `resources/views/layouts/app.blade.php` 1 つ。各画面は `@extends`
+- フォームには `@csrf` を必ず入れる
+- バリデーション失敗時は元のフォームに戻り、`@error('field')` でエラー表示
+- 成功時はセッションフラッシュ（`->with('status', '...')`) で通知を出す
+- CSS フレームワークは入れない（最低限のプレーン HTML/CSS で十分。必要になったら
+  `decisions.md` に理由を書いて足す）
+
+## HTTP ステータス規約（ブラウザ前提）
+
+- 一覧 / 詳細 / 編集画面の GET: 200
+- 作成 / 更新 / 削除の POST・PATCH・DELETE: 成功時は 302（リダイレクト）
+- バリデーション失敗: Laravel 標準の 422（元のフォームに戻る）
+- 存在しない id: 404
 
 ## DB 規約
 
@@ -71,6 +95,8 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 ## テスト規約
 
 - テストは `php artisan test`（PHPUnit）で実行
+- HTTP ルートのテストは feature test（`tests/Feature/`）で行い、`$this->get(...)`
+  `$this->post(...)` 経由で画面遷移とレスポンスを検証する
 - テスト用 DB は本番テーブルと分離する（`.env.testing` で別 DB or SQLite in-memory）
 - 各テストで DB をリセット（`RefreshDatabase` トレイトを使う）
 
@@ -79,3 +105,5 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - `.env` のコミット（`.env.example` だけコミット）
 - シークレット（API キー、DB パスワード等）のコミット
 - ホスト側に PHP / Composer を直接インストールして実行すること（コンテナ必須）
+- SPA 化・フロントエンドフレームワーク導入（Vue / React / Inertia / Livewire）
+- JSON API としてのレスポンス設計（このプロジェクトはブラウザ操作前提）
