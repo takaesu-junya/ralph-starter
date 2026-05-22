@@ -12,7 +12,6 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 
 ## 読む順番
 
-- [docs/ABOUT_RALPH.md](docs/ABOUT_RALPH.md): Ralph の使い方
 - [docs/HOW_RALPH_WORKS.md](docs/HOW_RALPH_WORKS.md): ループの仕組み
 - [.claude/skills/ralph-plan/README.md](.claude/skills/ralph-plan/README.md): `ralph-plan` skill の説明
 
@@ -21,3 +20,13 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 1. `/ralph-plan ...` で Ralph 用のスプリントを準備する
 2. `./ralph.sh ralph/sprints/<sprint-name> [N]` でループを回す
 3. 進捗はスプリントディレクトリ内のファイルと Git 履歴に残る
+
+```text
+/ralph-plan <やりたいこと> の Ralph スプリントを準備して
+```
+
+```sh
+./ralph.sh ralph/sprints/<sprint-name> [N]
+```
+
+`N` は最大イテレーション数です。途中で止めても、ファイルと Git 履歴に進捗が残ります。
