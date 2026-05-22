@@ -18,7 +18,8 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - Laravel 11 を **フルスタック MVC フレームワーク** として使う
 - 画面はサーバサイドレンダリングの Blade ビュー
 - ユーザはブラウザから操作する（JSON API ではない）
-- SPA / フロントエンドフレームワーク（Vue / React / Inertia / Livewire）は使わない
+- Laravel エコシステムの標準的な流れを優先する。Blade に加えて Livewire は利用可
+- SPA / フロントエンドフレームワーク（Vue / React / Inertia）は使わない
 
 ## 実行環境（必須）
 
@@ -32,6 +33,7 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - Laravel 11（フルスタック MVC）
 - Eloquent（ORM・Laravel 同梱）
 - Blade（ビューエンジン・Laravel 同梱）
+- Livewire（必要な画面で利用可）
 - Laravel Migrations（マイグレーション・`php artisan migrate`）
 - PostgreSQL 16（docker compose で起動）
 - Composer（パッケージ管理）
@@ -73,6 +75,7 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - 画面遷移は伝統的なサーバサイドレンダリング（Post-Redirect-Get）。POST/PATCH/DELETE 後は
   `redirect()->route(...)` で 302 リダイレクトする
 - レイアウトは `resources/views/layouts/app.blade.php` 1 つ。各画面は `@extends`
+- Livewire コンポーネントを使う場合も、画面全体の責務とルーティングは Laravel の Web ルートに寄せる
 - フォームには `@csrf` を必ず入れる
 - バリデーション失敗時は元のフォームに戻り、`@error('field')` でエラー表示
 - 成功時はセッションフラッシュ（`->with('status', '...')`) で通知を出す
@@ -105,5 +108,5 @@ CLAUDE.md は Claude Code 用のブリッジで、中身は `@AGENTS.md` の 1 �
 - `.env` のコミット（`.env.example` だけコミット）
 - シークレット（API キー、DB パスワード等）のコミット
 - ホスト側に PHP / Composer を直接インストールして実行すること（コンテナ必須）
-- SPA 化・フロントエンドフレームワーク導入（Vue / React / Inertia / Livewire）
+- SPA 化・フロントエンドフレームワーク導入（Vue / React / Inertia）
 - JSON API としてのレスポンス設計（このプロジェクトはブラウザ操作前提）
