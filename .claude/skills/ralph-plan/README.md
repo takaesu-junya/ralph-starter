@@ -13,7 +13,7 @@
 - Ralph が読む入力ファイルと、Ralph が追記する状態ファイルを置く
 - 最後に `./ralph.sh ...` の起動コマンドを提示する
 
-## 作るもの
+## ralph-plan skill が作るもの
 
 ```text
 ralph/sprints/<sprint-name>/

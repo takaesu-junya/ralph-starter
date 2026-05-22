@@ -14,7 +14,7 @@ description: Ralph ループに渡すスプリントを準備する。ユーザ�
 - コードや既存ファイルを読めば分かることは、ユーザーに聞かずに確認する
 - 実装技術や細かい設計を、この skill 側で勝手に固定しない
 
-## 作るもの
+## ralph-plan skill が作るもの
 
 ```text
 ralph/sprints/<sprint-name>/

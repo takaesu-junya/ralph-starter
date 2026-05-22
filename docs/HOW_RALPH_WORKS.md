@@ -9,7 +9,7 @@ Ralph の中心は単純です。
 
 ## 準備フェーズ
 
-`ralph-plan` が、対話しながらスプリントを準備します。
+`ralph-plan` skill が、対話しながら次のスプリントディレクトリを作ります。
 
 ```text
 ralph/sprints/<sprint-name>/
