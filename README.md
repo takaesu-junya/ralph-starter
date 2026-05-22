@@ -1,14 +1,23 @@
-# todo-sample
+# ralph-starter
 
-TODO 管理 Web アプリケーション。Laravel MVC で実装し、ブラウザから一覧・作成・編集・削除を操作する。
-開発は **Ralph（AI 自律タスク実行ループ）** で進める。実装本体は `PRD.json` の受け入れ基準を
-満たすかたちで Ralph が積み上げていく。
+Ralph Wiggum パターンを試すためのスターターリポジトリです。
 
-## このリポジトリを読む順番
+このリポジトリは、特定のアプリケーション仕様や技術スタックを教えるためのものではありません。
+Docker を使っても使わなくてもよく、PHP / Laravel でも Rust でも、好きな道具で構いません。
+ライブラリを使っても、あえて自作しても構いません。
 
-| 知りたいこと | 読むファイル |
-| --- | --- |
-| このプロジェクトは何で、技術スタックは何か | [docs/ABOUT_THIS_PROJECT.md](docs/ABOUT_THIS_PROJECT.md) |
-| このリポジトリで Ralph をどう運用するか（手順書） | [docs/ABOUT_RALPH.md](docs/ABOUT_RALPH.md) |
-| Ralph パターンそのものの仕様 | [.claude/skills/ralph-plan/README.md](.claude/skills/ralph-plan/README.md) |
-| Ralph がこのリポジトリでどう動くか（図解） | [docs/HOW_RALPH_WORKS.md](docs/HOW_RALPH_WORKS.md) |
+目的は 1 つだけです。
+
+> Ralph に渡す入力を用意し、AI の headless ループで小さな作業を積み上げる流れを体験する。
+
+## 読む順番
+
+- [docs/ABOUT_RALPH.md](docs/ABOUT_RALPH.md): Ralph の使い方
+- [docs/HOW_RALPH_WORKS.md](docs/HOW_RALPH_WORKS.md): ループの仕組み
+- [.claude/skills/ralph-plan/README.md](.claude/skills/ralph-plan/README.md): `ralph-plan` skill の説明
+
+## 基本の流れ
+
+1. `/ralph-plan ...` で Ralph 用のスプリントを準備する
+2. `./ralph.sh ralph/sprints/<sprint-name> [N]` でループを回す
+3. 進捗はスプリントディレクトリ内のファイルと Git 履歴に残る
