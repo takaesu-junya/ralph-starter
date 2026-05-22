@@ -11,11 +11,6 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 
 > Ralph に渡す入力を用意し、AI の headless ループで小さな作業を積み上げる流れを体験する。
 
-## 読む順番
-
-- [docs/HOW_RALPH_WORKS.md](docs/HOW_RALPH_WORKS.md): ループの仕組み
-- [.claude/skills/ralph-plan/README.md](.claude/skills/ralph-plan/README.md): `ralph-plan` skill の説明
-
 ## 基本の流れ
 
 1. `/ralph-plan ...` で Ralph 用のスプリントを準備する
@@ -31,6 +26,51 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 ```
 
 `N` は最大イテレーション数です。途中で止めても、ファイルと Git 履歴に進捗が残ります。
+
+## Ralph の仕組み
+
+Ralph の中心は単純です。
+
+1. 作業を小さな単位に分ける
+2. AI に 1 回で 1 単位だけ進めさせる
+3. 進捗をファイルに残す
+4. 完了するまで同じループを繰り返す
+
+### 準備フェーズ
+
+`ralph-plan` skill が、対話しながら次のスプリントディレクトリを作ります。
+
+```text
+ralph/sprints/<sprint-name>/
+├── PRD.json
+├── PROMPT.md
+├── progress.txt
+└── decisions.md
+```
+
+### 実行フェーズ
+
+`ralph.sh` がスプリントの入力を読み、headless の AI 実行を繰り返します。
+
+```text
+ralph.sh
+  -> AI に入力を渡す
+  -> AI が作業する
+  -> 進捗を書き残す
+  -> まだ終わっていなければ次のループへ
+```
+
+### 完了
+
+全部終わったと AI が判断したら、完了シグナルを出します。
+
+```text
+<promise>COMPLETE</promise>
+```
+
+`ralph.sh` はこの文字列を見つけてループを終了します。
+
+この仕組みは、特定の言語・フレームワーク・アプリ仕様には依存しません。
 
 ## ralph-plan Skill
 
