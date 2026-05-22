@@ -2,7 +2,7 @@
 
 ## 目次
 
-1. [基本の流れ](#1-基本の流れ)
+1. [基本の流れ (getting started)](#1-基本の流れ-getting-started)
 2. [Ralph の仕組み](#2-ralph-の仕組み)
    - [2.1 準備フェーズ](#21-準備フェーズ)
    - [2.2 実行フェーズ](#22-実行フェーズ)
@@ -25,7 +25,9 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 
 > Ralph に渡す入力を用意し、AI の headless ループで小さな作業を積み上げる流れを体験する。
 
-## 1. 基本の流れ
+## 1. 基本の流れ (getting started)
+
+この順番の通り進められます。
 
 1. `/ralph-plan ...` で Ralph 用のスプリントを準備する
 2. `./ralph.sh ralph/sprints/<sprint-name> [N]` でループを回す
