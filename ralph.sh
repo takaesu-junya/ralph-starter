@@ -131,7 +131,7 @@ $(cat "$PROMPT_FILE_ABS")
 
   echo "$OUTPUT"
 
-  if echo "$OUTPUT" | grep -q '<promise>COMPLETE</promise>'; then
+  if echo "$OUTPUT" | grep -Fxq '<promise>COMPLETE</promise>'; then
     echo ""
     echo "=== COMPLETE ==="
     echo "All stories completed at iteration $ITERATION"
