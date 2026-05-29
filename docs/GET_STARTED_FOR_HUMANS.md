@@ -29,9 +29,29 @@ Docker を使っても使わなくてもよく、PHP / Laravel でも Rust で�
 
 この順番の通り進められます。
 
-1. `/ralph-plan ...` で Ralph 用のスプリントを準備する
-2. `./ralph.sh ralph/sprints/<sprint-name> [N]` でループを回す
-3. 進捗はスプリントディレクトリ内のファイルと Git 履歴に残る
+1. `main` から作業用ブランチを作る
+2. 作業用ブランチで Claude Code を起動する
+3. `/ralph-plan ...` で Ralph 用のスプリントを準備する
+4. `./ralph.sh ralph/sprints/<sprint-name> [N]` でループを回す
+5. 進捗はスプリントディレクトリ内のファイルと Git 履歴に残る
+
+まず、このスターターリポジトリ自体を `main` のまま作業場所にしないようにします。
+たとえば `sample-app-001` のような作業用ブランチを作り、そこに checkout してから始めてください。
+
+```sh
+git checkout main
+git pull
+git checkout -b sample-app-001
+```
+
+次に、その作業用ブランチ上で Claude Code を起動します。
+
+```sh
+claude
+```
+
+以降の `/ralph-plan` は Claude Code 上で実行する前提です。
+補足として、Codex など別の AI コーディング環境でも、`AGENTS.md` や skill ファイルを参照させれば同じ流れで動作するはずです。
 
 ```text
 /ralph-plan <やりたいこと> の Ralph スプリントを準備して
